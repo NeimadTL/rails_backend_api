@@ -1,5 +1,5 @@
 class TeamSerializer < ActiveModel::Serializer
-  attributes :name, :manager, :members
+  attributes :id, :name, :manager, :members
 
   def manager
     object.manager.full_name
