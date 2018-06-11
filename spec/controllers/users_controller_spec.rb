@@ -8,6 +8,8 @@ RSpec.describe UsersController, type: :controller do
         r_and_d_team = Team.where(name:"R&D").first
         post :create, xhr: true, params: { user: { full_name: "Damien TALBOT", team_id: r_and_d_team.id } }
         expect(response).to have_http_status(:success)
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['message']).to eq "The user Damien TALBOT was created successfully"
         created_user = User.last
         expect(created_user.full_name).to eq "Damien TALBOT"
         expect(created_user.team_id) == r_and_d_team.id
@@ -17,6 +19,8 @@ RSpec.describe UsersController, type: :controller do
       it "without team_id params, returns http success and user got created without being in a team" do
         post :create, xhr: true, params: { user: { full_name: "John DOE" } }
         expect(response).to have_http_status(:success)
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['message']).to eq "The user John DOE was created successfully"
         created_user = User.last
         expect(created_user.full_name).to eq "John DOE"
         expect(created_user.team_id.nil?).to be true
@@ -25,6 +29,8 @@ RSpec.describe UsersController, type: :controller do
       it "with bad params, returns http unprocessable_entity" do
         post :create, xhr: true, params: { user: { full_name: nil } }
         expect(response).to have_http_status(:unprocessable_entity)
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['users'].include?("Full name can't be blank")).to be true
       end
     end
 
