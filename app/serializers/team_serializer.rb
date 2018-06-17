@@ -6,10 +6,6 @@ class TeamSerializer < ActiveModel::Serializer
   end
 
   def members
-    members_array = []
-    object.members.each do |member|
-      members_array << member.full_name
-    end
-    members_array
+    object.members.map { |member| member.full_name }
   end
 end
